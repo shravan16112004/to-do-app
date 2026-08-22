@@ -59,7 +59,7 @@ jobs:
             echo "Updated Kubernetes image:"
             grep "image:" k8s/deployment.yaml
 
-      - run:
+                  - run:
           name: Commit Updated Kubernetes Manifest
           command: |
             git config --global user.name "circleci"
@@ -67,10 +67,24 @@ jobs:
 
             git add k8s/deployment.yaml
 
-            git diff --cached --quiet || \
-            git commit -m "Update Kubernetes image to ${CIRCLE_SHA1} [skip ci]"
+            if ! git diff --cached --quiet; then
+              git commit -m "Update Kubernetes image to ${CIRCLE_SHA1} [skip ci]"
 
-            git push origin HEAD:main
+              if [ -z "${GITHUB_TOKEN}" ]; then
+                echo "ERROR: GITHUB_TOKEN is not configured in CircleCI."
+                exit 1
+              fi
+
+              echo "GitHub token detected."
+
+              git config --global --unset-all credential.helper || true
+
+              git -c credential.helper= \
+                push "https://x-access-token:${GITHUB_TOKEN}@github.com/shravan16112004/to-do-app.git" HEAD:main
+
+            else
+              echo "No Kubernetes manifest changes detected."
+            fi
 
 workflows:
   build-test-push:
