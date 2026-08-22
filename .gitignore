@@ -1,0 +1,88 @@
+# ==========================================
+# Node.js
+# ==========================================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# ==========================================
+# Vite / React
+# ==========================================
+
+dist/
+.vite/
+
+
+# ==========================================
+# Testing
+# ==========================================
+
+coverage/
+.nyc_output/
+
+
+# ==========================================
+# Terraform
+# ==========================================
+
+# Terraform working directory
+terraform/.terraform/
+
+# Terraform state files
+terraform/*.tfstate
+terraform/*.tfstate.*
+
+# Terraform crash logs
+terraform/crash.log
+terraform/crash.*.log
+
+# Terraform override files
+terraform/override.tf
+terraform/override.tf.json
+terraform/*_override.tf
+terraform/*_override.tf.json
+
+# Terraform variable files containing secrets
+terraform/*.tfvars
+terraform/*.tfvars.json
+
+
+# ==========================================
+# Environment / Secrets
+# ==========================================
+
+.env
+.env.*
+!.env.example
+
+
+# ==========================================
+# OS / Editor
+# ==========================================
+
+.DS_Store
+Thumbs.db
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+
+# ==========================================
+# Logs
+# ==========================================
+
+*.log
+
+
+# ==========================================
+# Temporary files
+# ==========================================
+
+*.tmp
+*.temp
