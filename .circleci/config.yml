@@ -1,10 +1,6 @@
 version: 2.1
 
-orbs:
-  aws-ecr: circleci/aws-ecr@9.3.7
-
 jobs:
-
   build-and-test:
     docker:
       - image: cimg/node:22.14
@@ -18,12 +14,11 @@ jobs:
 
       - run:
           name: Run Tests
-          command: npm test -- --watchAll=false
+          command: npm test
 
       - run:
           name: Build React Application
           command: npm run build
-
 
   build-and-push-image:
     machine:
@@ -35,12 +30,14 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build -t ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/todo-app:${CIRCLE_SHA1} .
+            docker build \
+              -t ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/todo-app:${CIRCLE_SHA1} .
 
       - run:
           name: Login to Amazon ECR
           command: |
-            aws ecr get-login-password --region ${AWS_REGION} | \
+            aws ecr get-login-password \
+              --region ${AWS_REGION} | \
             docker login \
               --username AWS \
               --password-stdin \
@@ -52,12 +49,9 @@ jobs:
             docker push \
               ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/todo-app:${CIRCLE_SHA1}
 
-
 workflows:
-
   build-test-push:
     jobs:
-
       - build-and-test
 
       - build-and-push-image:
@@ -67,4 +61,3 @@ workflows:
             branches:
               only:
                 - main
-
