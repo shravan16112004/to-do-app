@@ -59,7 +59,7 @@ jobs:
             echo "Updated Kubernetes image:"
             grep "image:" k8s/deployment.yaml
 
-                  - run:
+      - run:
           name: Commit Updated Kubernetes Manifest
           command: |
             git config --global user.name "circleci"
@@ -81,7 +81,6 @@ jobs:
 
               git -c credential.helper= \
                 push "https://x-access-token:${GITHUB_TOKEN}@github.com/shravan16112004/to-do-app.git" HEAD:main
-
             else
               echo "No Kubernetes manifest changes detected."
             fi
@@ -94,6 +93,7 @@ workflows:
       - build-and-push-image:
           requires:
             - build-and-test
+
           filters:
             branches:
               only:
