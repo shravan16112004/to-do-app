@@ -8,73 +8,77 @@ import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import ListGroup from "react-bootstrap/ListGroup";
-  
+
 class App extends Component {
     constructor(props) {
         super(props);
-  
-        // Setting up state
+
+        // Load saved todos from browser localStorage
+        const savedList = localStorage.getItem("todoList");
+
         this.state = {
             userInput: "",
-            list: [],
+            list: savedList ? JSON.parse(savedList) : [],
         };
     }
-  
+
+    // Save todo list to localStorage whenever state changes
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.list !== this.state.list) {
+            localStorage.setItem("todoList", JSON.stringify(this.state.list));
+        }
+    }
+
     // Set a user input value
     updateInput(value) {
         this.setState({
             userInput: value,
         });
     }
-  
-    // Add item if user input in not empty
+
+    // Add item if user input is not empty
     addItem() {
-        if (this.state.userInput !== "") {
+        if (this.state.userInput.trim() !== "") {
             const userInput = {
-                // Add a random id which is used to delete
                 id: Math.random(),
-  
-                // Add a user value to list
                 value: this.state.userInput,
             };
-  
-            // Update list
+
             const list = [...this.state.list];
             list.push(userInput);
-  
-            // reset state
+
             this.setState({
                 list,
                 userInput: "",
             });
         }
     }
-  
-    // Function to delete item from list use id to delete
+
+    // Delete item from list
     deleteItem(key) {
         const list = [...this.state.list];
-  
-        // Filter values and leave value which we need to delete
+
         const updateList = list.filter((item) => item.id !== key);
-  
-        // Update list in state
+
         this.setState({
             list: updateList,
         });
     }
-  
+
+    // Edit item
     editItem = (index) => {
-      const todos = [...this.state.list];
-      const editedTodo = prompt('Edit the todo:');
-      if (editedTodo !== null && editedTodo.trim() !== '') {
-        let updatedTodos = [...todos]
-        updatedTodos[index].value= editedTodo
-        this.setState({
-          list: updatedTodos,
-      });
-      }
-    }
-  
+        const todos = [...this.state.list];
+        const editedTodo = prompt("Edit the todo:");
+
+        if (editedTodo !== null && editedTodo.trim() !== "") {
+            todos[index].value = editedTodo;
+
+            this.setState({
+                list: todos,
+            });
+        }
+    };
+
     render() {
         return (
             <Container>
@@ -89,8 +93,9 @@ class App extends Component {
                 >
                     10WeeksofCloudOps - TODO LIST
                 </Row>
-  
+
                 <hr />
+
                 <Row>
                     <Col md={{ span: 5, offset: 4 }}>
                         <InputGroup className="mb-3">
@@ -104,6 +109,7 @@ class App extends Component {
                                 aria-label="add something"
                                 aria-describedby="basic-addon2"
                             />
+
                             <InputGroup>
                                 <Button
                                     variant="dark"
@@ -116,34 +122,47 @@ class App extends Component {
                         </InputGroup>
                     </Col>
                 </Row>
+
                 <Row>
                     <Col md={{ span: 5, offset: 4 }}>
                         <ListGroup>
-                            {/* map over and print items */}
                             {this.state.list.map((item, index) => {
                                 return (
-                                  <div key = {index} > 
-                                    <ListGroup.Item
-                                        variant="dark"
-                                        action
-                                        style={{display:"flex",
-                                                justifyContent:'space-between'
-                                      }}
-                                    >
-                                        {item.value}
-                                        <span>
-                                        <Button style={{marginRight:"10px"}}
-                                        variant = "light"
-                                        onClick={() => this.deleteItem(item.id)}>
-                                          Delete
-                                        </Button>
-                                        <Button variant = "light"
-                                        onClick={() => this.editItem(index)}>
-                                          Edit
-                                        </Button>
-                                        </span>
-                                    </ListGroup.Item>
-                                  </div>
+                                    <div key={item.id}>
+                                        <ListGroup.Item
+                                            variant="dark"
+                                            action
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                            }}
+                                        >
+                                            {item.value}
+
+                                            <span>
+                                                <Button
+                                                    style={{
+                                                        marginRight: "10px",
+                                                    }}
+                                                    variant="light"
+                                                    onClick={() =>
+                                                        this.deleteItem(item.id)
+                                                    }
+                                                >
+                                                    Delete
+                                                </Button>
+
+                                                <Button
+                                                    variant="light"
+                                                    onClick={() =>
+                                                        this.editItem(index)
+                                                    }
+                                                >
+                                                    Edit
+                                                </Button>
+                                            </span>
+                                        </ListGroup.Item>
+                                    </div>
                                 );
                             })}
                         </ListGroup>
@@ -153,5 +172,5 @@ class App extends Component {
         );
     }
 }
-  
+
 export default App;
