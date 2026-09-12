@@ -4,7 +4,7 @@ provider "aws" {
   default_tags {
     tags = {
       Project     = "Terraform-EKS-Todo"
-      Environment = "Dev"
+      Environment = "Production"
       ManagedBy   = "Terraform"
       Owner       = "Shravan"
     }
