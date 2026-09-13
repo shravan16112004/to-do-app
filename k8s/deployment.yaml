@@ -22,7 +22,7 @@ spec:
       containers:
         - name: todo-app
 
-          image: 660852786197.dkr.ecr.ap-south-1.amazonaws.com/todo-app:509704d6dbb7f52d1da5b34a21e4617921ea73f4
+          image: 660852786197.dkr.ecr.ap-south-1.amazonaws.com/todo-app:2877eb03d4293c37b18e31947b8b5f5a0313f729
 
           imagePullPolicy: Always
 
