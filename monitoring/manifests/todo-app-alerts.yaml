@@ -226,14 +226,19 @@ spec:
 
         - alert: TodoAppPodDisruption
           expr: |
-            kube_pod_deletion_timestamp{
-              namespace="todo-app",
-              pod=~"todo-app-.*"
-            } > 0
+            changes(
+              kube_pod_status_phase{
+                namespace="todo-app",
+                pod=~"todo-app-.*"
+              }[2m]
+            ) > 0
           for: 0s
+          keep_firing_for: 2m
           labels:
             severity: warning
             app: todo-app
           annotations:
-            summary: "Todo App pod is being deleted"
-            description: "A Todo App pod is being deleted."
+            summary: "Todo App pod was deleted or recreated"
+            description: "A Todo App pod was deleted, recreated, or changed state."
+
+
