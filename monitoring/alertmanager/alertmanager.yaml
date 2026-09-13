@@ -14,7 +14,7 @@ route:
   routes:
     - receiver: "null"
       matchers:
-        - alertname="Watchdog"
+        - alertname=~"Watchdog|KubeSchedulerDown|KubeControllerManagerDown"
 
 receivers:
   - name: "null"
